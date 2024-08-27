@@ -11,10 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
-firebase-config.jsx
 
 # Editor directories and files
 .vscode/*
+firebase-config.jsx
 !.vscode/extensions.json
 .idea
 .DS_Store
