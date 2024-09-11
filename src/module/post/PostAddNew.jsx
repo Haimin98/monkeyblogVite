@@ -1,24 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 import { useForm } from "react-hook-form";
 import slugify from "slugify";
-import styled from "styled-components";
-import ImageUpload from "components/image/ImageUpload";
-import { Button } from "components/button";
-import { Field } from "components/field";
-import { Label } from "components/label";
-import { Input } from "components/input";
-import { Radio } from "components/checkbox";
-import { Dropdown } from "components/dropdown";
-const PostAddNewStyles = styled.div``;
+import Field from "../../components/field/Field";
+import Label from "../../components/Label/Label";
+import Input from "../../components/input/Input";
+import Radio from "../../components/checkbox/Radio";
+import Button from "../../components/button/Button";
+import Dropdown from "../../components/dropdown/Dropdown";
+import Option from "../../components/dropdown/Option";
+import Search from "../../components/dropdown/Search";
+import ImageUpload from "../../components/image/ImageUpload";
+Dropdown.Option = Option;
+Dropdown.Search = Search;
 
 const PostAddNew = () => {
-  const { control, watch, setValue, handleSubmit } = useForm({
+  const { control, watch, setValue, handleSubmit, getValues } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
@@ -37,6 +40,9 @@ const PostAddNew = () => {
     //*upload image
     // handleUploadImage(values.image);
   };
+  const [progress, setProgress] = useState(0);
+  const [image, setImage] = useState("");
+
   const handleUploadImage = (file) => {
     const storage = getStorage();
     const storageRef = ref(storage, "images/" + file.name);
@@ -45,10 +51,11 @@ const PostAddNew = () => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress =
+        // Get task progressPercent, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progressPercent =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
+        setProgress(progressPercent);
+        console.log("Upload is " + progressPercent + "% done");
         switch (snapshot.state) {
           case "paused":
             console.log("Upload is paused");
@@ -67,6 +74,7 @@ const PostAddNew = () => {
         // Upload completed successfully, now we can get the download URL
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log("File available at", downloadURL);
+          setImage(downloadURL);
         });
       }
     );
@@ -75,12 +83,27 @@ const PostAddNew = () => {
     // e.preventDefault();
     // console.log(e.target.files);
     const file = e.target.files[0];
-    console.log("🚀 ~ onSelectImage ~ file:", file);
+    // console.log(file?.name);
     if (!file) return;
-    setValue("image", file);
+    setValue("image_name", file.name);
+    handleUploadImage(file);
+  };
+  //delete image
+  const handleDeleteImage = () => {
+    const storage = getStorage();
+    const imageRef = ref(storage, "images/" + getValues("image_name"));
+    deleteObject(imageRef)
+      .then(() => {
+        console.log("delete image successfully");
+        setImage("");
+        setProgress(0);
+      })
+      .catch((error) => {
+        console.log("Can't delete image", error);
+      });
   };
   return (
-    <PostAddNewStyles>
+    <div className="mb-24 post-add-new">
       <h1 className="dashboard-heading">Add new post</h1>
       <form onSubmit={handleSubmit(addPostHandler)}>
         <div className="grid grid-cols-2 mb-10 gap-x-10">
@@ -104,7 +127,12 @@ const PostAddNew = () => {
         <div className="grid grid-cols-2 mb-10 gap-x-10">
           <Field>
             <Label>Image</Label>
-            <ImageUpload onChange={onSelectImage}></ImageUpload>
+            <ImageUpload
+              onChange={onSelectImage}
+              handleDeleteImage={handleDeleteImage}
+              progress={progress}
+              image={image}
+            ></ImageUpload>
             {/* <input type="file" name="image" onChange={onSelectImage} /> */}
             {/* <Input
               control={control}
@@ -148,7 +176,11 @@ const PostAddNew = () => {
           </Field>
           <Field>
             <Label>Author</Label>
-            <Input control={control} placeholder="Find the author"></Input>
+            <Input
+              control={control}
+              placeholder="Find the author"
+              name="author"
+            ></Input>
           </Field>
         </div>
         <div className="grid grid-cols-2 mb-10 gap-x-10">
@@ -164,11 +196,11 @@ const PostAddNew = () => {
           </Field>
           <Field></Field>
         </div>
-        <Button type="submit" className="mx-auto">
+        <Button type="submit" moreClass="mx-auto max-w-[250px]">
           Add new post
         </Button>
       </form>
-    </PostAddNewStyles>
+    </div>
   );
 };
 

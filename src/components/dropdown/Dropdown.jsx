@@ -22,7 +22,7 @@ const Dropdown = ({
             {show ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -37,7 +37,7 @@ const Dropdown = ({
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -53,7 +53,7 @@ const Dropdown = ({
           </span>
         </div>
         {show && (
-          <div className="absolute top-full left-0 w-full bg-white shadow-sm">
+          <div className="absolute left-0 w-full bg-white shadow-sm top-full">
             {children}
           </div>
         )}

@@ -16,6 +16,7 @@ const Button = ({
   children,
   kind = "primary",
   isLoading = false,
+  moreClass = "",
   ...props
 }) => {
   const { to, height = "h-[66px]" } = props;
@@ -24,7 +25,7 @@ const Button = ({
   const secondary = `bg-white border border-solid border-primary text-primary`;
   const buttonClasses = `${baseClasses} ${height}  ${
     kind === "primary" ? primary : secondary
-  } disabled:opacity-50 disabled:pointer-events-none`;
+  } disabled:opacity-50 disabled:pointer-events-none ${moreClass}`;
   const child = !!isLoading ? <LoadingSpinner></LoadingSpinner> : children;
   if (to !== "" && typeof to === "string") {
     return (

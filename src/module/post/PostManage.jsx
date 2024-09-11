@@ -1,6 +1,6 @@
-import { Pagination } from "components/pagination";
-import { Table } from "components/table";
 import React from "react";
+import Pagination from "../../components/pagination/Pagination";
+import Table from "../../components/table/Table";
 
 const PostManage = () => {
   return (

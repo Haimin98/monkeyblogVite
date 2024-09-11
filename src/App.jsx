@@ -6,6 +6,9 @@ import { AuthProvider } from "./contexts/auth-context";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import DashboardLayout from "./module/dashboard/DashboardLayout";
+import PostManage from "./module/post/PostManage";
+import PostAddNew from "./module/post/PostAddNew";
 
 const App = () => {
   return (
@@ -17,6 +20,10 @@ const App = () => {
             <Route path="/sign-up" element={<SignUpPage />}></Route>
             <Route path="/sign-in" element={<SignInPage />}></Route>
             <Route path="*" element={<NotFoundPage />}></Route>
+            <Route element={<DashboardLayout></DashboardLayout>}>
+              <Route path="/manage/post" element={<PostManage />}></Route>
+              <Route path="/manage/add-post" element={<PostAddNew />}></Route>
+            </Route>
           </Routes>
         </AuthProvider>
       </ThemeProvider>
