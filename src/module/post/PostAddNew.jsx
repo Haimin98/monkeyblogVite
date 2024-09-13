@@ -1,11 +1,4 @@
-import React, { useState } from "react";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+import React from "react";
 import { useForm } from "react-hook-form";
 import slugify from "slugify";
 import Field from "../../components/field/Field";
@@ -17,6 +10,7 @@ import Dropdown from "../../components/dropdown/Dropdown";
 import Option from "../../components/dropdown/Option";
 import Search from "../../components/dropdown/Search";
 import ImageUpload from "../../components/image/ImageUpload";
+import useFirebaseImage from "../../hooks/useFirebaseImage";
 Dropdown.Option = Option;
 Dropdown.Search = Search;
 
@@ -32,7 +26,6 @@ const PostAddNew = () => {
   });
   const watchStatus = watch("status");
   const watchCategory = watch("category");
-  // console.log("PostAddNew ~ watchCategory", watchCategory);
   const addPostHandler = async (values) => {
     //*upload slug using slugify
     values.slug = slugify(values.slug || values.title, { lower: true });
@@ -40,68 +33,8 @@ const PostAddNew = () => {
     //*upload image
     // handleUploadImage(values.image);
   };
-  const [progress, setProgress] = useState(0);
-  const [image, setImage] = useState("");
-
-  const handleUploadImage = (file) => {
-    const storage = getStorage();
-    const storageRef = ref(storage, "images/" + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // Get task progressPercent, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progressPercent =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(progressPercent);
-        console.log("Upload is " + progressPercent + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-            console.log("Nothing");
-        }
-      },
-      (error) => {
-        console.log("error");
-      },
-      () => {
-        // Upload completed successfully, now we can get the download URL
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-          setImage(downloadURL);
-        });
-      }
-    );
-  };
-  const onSelectImage = (e) => {
-    // e.preventDefault();
-    // console.log(e.target.files);
-    const file = e.target.files[0];
-    // console.log(file?.name);
-    if (!file) return;
-    setValue("image_name", file.name);
-    handleUploadImage(file);
-  };
-  //delete image
-  const handleDeleteImage = () => {
-    const storage = getStorage();
-    const imageRef = ref(storage, "images/" + getValues("image_name"));
-    deleteObject(imageRef)
-      .then(() => {
-        console.log("delete image successfully");
-        setImage("");
-        setProgress(0);
-      })
-      .catch((error) => {
-        console.log("Can't delete image", error);
-      });
-  };
+  const { image, progress, handleDeleteImage, handleSelectImage } =
+    useFirebaseImage(setValue, getValues);
   return (
     <div className="mb-24 post-add-new">
       <h1 className="dashboard-heading">Add new post</h1>
@@ -128,19 +61,11 @@ const PostAddNew = () => {
           <Field>
             <Label>Image</Label>
             <ImageUpload
-              onChange={onSelectImage}
+              onChange={handleSelectImage}
               handleDeleteImage={handleDeleteImage}
               progress={progress}
               image={image}
             ></ImageUpload>
-            {/* <input type="file" name="image" onChange={onSelectImage} /> */}
-            {/* <Input
-              control={control}
-              type="file"
-              name="image"
-              // accept="image/*"
-              onChange={handleUploadImage}
-            ></Input> */}
           </Field>
           <Field>
             <Label>Status</Label>
