@@ -11,6 +11,7 @@
 - userId
 - categoryID
 - content
+- hot(true or false)
 
 # Category
 
