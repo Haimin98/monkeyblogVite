@@ -10,10 +10,15 @@ import { Dropdown } from "../../components/dropdown";
 import ImageUpload from "../../components/image/ImageUpload";
 import useFirebaseImage from "../../hooks/useFirebaseImage";
 import Toggle from "../../components/toggle/Toggle";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
+import { useAuth } from "../../contexts/auth-context";
+import { toast } from "react-toastify";
+
 const PostAddNew = () => {
-  const { control, watch, setValue, handleSubmit, getValues } = useForm({
+  const { userInfo } = useAuth();
+  // console.log("🚀 ~ PostAddNew ~ userInfo:", userInfo);
+  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
@@ -21,21 +26,40 @@ const PostAddNew = () => {
       status: "approved",
       categoryId: "",
       hot: false,
+      image: "",
     },
   });
+  const { image, progress, handleDeleteImage, handleSelectImage } =
+    useFirebaseImage(setValue, getValues);
   const watchStatus = watch("status");
   const watchHot = watch("hot");
   const [categories, setCategories] = useState([]);
+  const [selectCategory, setSelectCategory] = useState("");
   const addPostHandler = async (values) => {
     //*upload slug using slugify
     values.slug = slugify(values.slug || values.title, { lower: true });
     values.status = values.status;
+    const colRef = collection(db, "posts");
+    await addDoc(colRef, {
+      ...values,
+      image,
+      userId: userInfo.uid,
+    });
+    toast.success("Create new post successfully");
     console.log(values);
+    reset({
+      title: "",
+      slug: "",
+      status: "approved",
+      categoryId: "",
+      hot: false,
+      image: "",
+    });
+    setSelectCategory(null);
     //*upload image
     // handleUploadImage(values.image);
   };
-  const { image, progress, handleDeleteImage, handleSelectImage } =
-    useFirebaseImage(setValue, getValues);
+
   //*get category
   useEffect(() => {
     async function getData() {
@@ -53,6 +77,10 @@ const PostAddNew = () => {
     }
     getData();
   }, []);
+  const handleClickOption = (item) => {
+    setValue("categoryId", item.id);
+    setSelectCategory(item);
+  };
   return (
     <div className="mb-24 post-add-new">
       <h1 className="dashboard-heading">Add new post</h1>
@@ -102,13 +130,19 @@ const PostAddNew = () => {
                   categories.map((item) => (
                     <Dropdown.Option
                       key={item.id}
-                      onClick={() => setValue("categoryId", item.id)}
+                      // onClick={() => setValue("categoryId", item.id)}
+                      onClick={() => handleClickOption(item)}
                     >
                       {item.name}
                     </Dropdown.Option>
                   ))}
               </Dropdown.List>
             </Dropdown>
+            {selectCategory?.name && (
+              <span className="inline-block p-3 text-sm font-medium rounded bg-gradient-to-r from-primary to-secondary">
+                {selectCategory?.name}
+              </span>
+            )}
           </Field>
         </div>
         <div className="grid grid-cols-2 mb-10 gap-x-10">
