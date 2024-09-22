@@ -10,14 +10,24 @@ import { Dropdown } from "../../components/dropdown";
 import ImageUpload from "../../components/image/ImageUpload";
 import useFirebaseImage from "../../hooks/useFirebaseImage";
 import Toggle from "../../components/toggle/Toggle";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
 import { useAuth } from "../../contexts/auth-context";
 import { toast } from "react-toastify";
 
 const PostAddNew = () => {
+  //*title
+  useEffect(() => {
+    document.title = "Monkey Blogging - Add new post";
+  });
   const { userInfo } = useAuth();
-  // console.log("🚀 ~ PostAddNew ~ userInfo:", userInfo);
   const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -29,35 +39,51 @@ const PostAddNew = () => {
       image: "",
     },
   });
-  const { image, progress, handleDeleteImage, handleSelectImage } =
-    useFirebaseImage(setValue, getValues);
+  const {
+    image,
+    setImage,
+    progress,
+    setProgress,
+    handleDeleteImage,
+    handleSelectImage,
+  } = useFirebaseImage(setValue, getValues);
   const watchStatus = watch("status");
   const watchHot = watch("hot");
   const [categories, setCategories] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
+  const [loading, setLoading] = useState(false);
   const addPostHandler = async (values) => {
-    //*upload slug using slugify
-    values.slug = slugify(values.slug || values.title, { lower: true });
-    values.status = values.status;
-    const colRef = collection(db, "posts");
-    await addDoc(colRef, {
-      ...values,
-      image,
-      userId: userInfo.uid,
-    });
-    toast.success("Create new post successfully");
-    console.log(values);
-    reset({
-      title: "",
-      slug: "",
-      status: "approved",
-      categoryId: "",
-      hot: false,
-      image: "",
-    });
-    setSelectCategory(null);
-    //*upload image
-    // handleUploadImage(values.image);
+    try {
+      //*upload slug using slugify
+      values.slug = slugify(values.slug || values.title, { lower: true });
+      values.status = values.status;
+      const colRef = collection(db, "posts");
+      await addDoc(colRef, {
+        ...values,
+        image,
+        userId: userInfo.uid,
+        createAt: serverTimestamp(),
+      });
+      setLoading(true);
+      toast.success("Create new post successfully");
+      console.log(values);
+      reset({
+        title: "",
+        slug: "",
+        status: "approved",
+        categoryId: "",
+        hot: false,
+        image: "",
+      });
+      setLoading(false);
+      setSelectCategory(null);
+      setImage("");
+      setProgress(0);
+    } catch (err) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   //*get category
@@ -102,14 +128,14 @@ const PostAddNew = () => {
               name="slug"
             ></Input>
           </Field>
-          <Field>
+          {/* <Field>
             <Label>Author</Label>
             <Input
               control={control}
               placeholder="Find the author"
               name="author"
             ></Input>
-          </Field>
+          </Field> */}
         </div>
         <div className="grid grid-cols-2 mb-10 gap-x-10">
           <Field>
@@ -186,7 +212,12 @@ const PostAddNew = () => {
             </div>
           </Field>
         </div>
-        <Button type="submit" moreClass="mx-auto max-w-[250px]">
+        <Button
+          type="submit"
+          moreClass="mx-auto max-w-[250px]"
+          isLoading={loading}
+          disabled={loading}
+        >
           Add new post
         </Button>
       </form>

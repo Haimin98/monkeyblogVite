@@ -1,10 +1,6 @@
 import React from "react";
 
-const PostMeta = ({
-  className = "",
-  date = "Mar 23",
-  authorName = "Minh Hai",
-}) => {
+const PostMeta = ({ className = "", date = "Mar 23", authorName = "" }) => {
   const classBasic =
     "flex items-center gap-3 text-sm font-semibold text-inherit";
   return (

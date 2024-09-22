@@ -11,8 +11,9 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase/firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import AuthenticationPage from "./AuthenticationPage";
+import slugify from "slugify";
 const schema = yup.object({
   fullName: yup.string().required("Please enter your full name"),
   email: yup
@@ -31,8 +32,6 @@ const SignUpPage = () => {
     control,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
-    watch,
-    reset,
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
@@ -49,11 +48,17 @@ const SignUpPage = () => {
       displayName: values.fullName,
     });
     const colRef = collection(db, "users");
-    await addDoc(colRef, {
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
       fullname: values.fullName,
       email: values.email,
       password: values.password,
+      username: slugify(values.fullName, { lower: true }),
     });
+    // await addDoc(colRef, {
+    //   fullname: values.fullName,
+    //   email: values.email,
+    //   password: values.password,
+    // });
     toast.success("Register successfully");
     navigate("/");
   };
