@@ -5,6 +5,7 @@ import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
+import slugify from "slugify";
 
 const PostFeatureItem = ({ data }) => {
   const [category, setCategory] = useState("");
@@ -44,7 +45,10 @@ const PostFeatureItem = ({ data }) => {
           {category && (
             <PostCategory type="primary">{category?.name}</PostCategory>
           )}
-          <PostMeta authorName={user?.fullname}></PostMeta>
+          <PostMeta
+            authorName={user?.fullname}
+            to={slugify(user?.fullname || "", { lower: true })}
+          ></PostMeta>
         </div>
         <PostTitle className="post-title" size="big">
           {data.title}

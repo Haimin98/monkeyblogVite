@@ -128,14 +128,6 @@ const PostAddNew = () => {
               name="slug"
             ></Input>
           </Field>
-          {/* <Field>
-            <Label>Author</Label>
-            <Input
-              control={control}
-              placeholder="Find the author"
-              name="author"
-            ></Input>
-          </Field> */}
         </div>
         <div className="grid grid-cols-2 mb-10 gap-x-10">
           <Field>
@@ -156,7 +148,6 @@ const PostAddNew = () => {
                   categories.map((item) => (
                     <Dropdown.Option
                       key={item.id}
-                      // onClick={() => setValue("categoryId", item.id)}
                       onClick={() => handleClickOption(item)}
                     >
                       {item.name}
