@@ -9,6 +9,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import DashboardLayout from "./module/dashboard/DashboardLayout";
 import PostManage from "./module/post/PostManage";
 import PostAddNew from "./module/post/PostAddNew";
+import CategoryAddNew from "./category/CategoryAddNew";
+import CategoryManage from "./category/CategoryManage";
 
 const App = () => {
   return (
@@ -23,6 +25,14 @@ const App = () => {
             <Route element={<DashboardLayout></DashboardLayout>}>
               <Route path="/manage/post" element={<PostManage />}></Route>
               <Route path="/manage/add-post" element={<PostAddNew />}></Route>
+              <Route
+                path="/manage/category"
+                element={<CategoryManage />}
+              ></Route>
+              <Route
+                path="/manage/add-category"
+                element={<CategoryAddNew />}
+              ></Route>
             </Route>
           </Routes>
         </AuthProvider>

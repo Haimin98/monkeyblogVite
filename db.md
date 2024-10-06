@@ -16,9 +16,10 @@
 # Category
 
 - id
-- title
+- name
 - slug
 - status 1(approve) 2(pending)
+- createAt
 
 # User
 

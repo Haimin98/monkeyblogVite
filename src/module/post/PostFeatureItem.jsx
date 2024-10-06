@@ -1,11 +1,11 @@
+import slugify from "slugify";
 import React, { useEffect, useState } from "react";
-import PostCategory from "./PostCategory";
 import PostTitle from "./PostTitle";
 import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
+import PostCategory from "./PostCategory";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase-config";
-import slugify from "slugify";
 
 const PostFeatureItem = ({ data }) => {
   const [category, setCategory] = useState("");
@@ -31,7 +31,10 @@ const PostFeatureItem = ({ data }) => {
     fetchUser();
   }, [data.userId]);
   if (!data || !data.id) return null;
-  console.log(user);
+  // console.log(user);
+  //*time
+  const date = new Date(data?.createAt?.seconds * 1000);
+  const formatDate = new Date(date).toLocaleDateString("vi-VN");
   return (
     <div className="w-full rounded-2xl relative h-[169px] min-[1024px]:h-[272px]">
       <PostImage
@@ -48,6 +51,7 @@ const PostFeatureItem = ({ data }) => {
           <PostMeta
             authorName={user?.fullname}
             to={slugify(user?.fullname || "", { lower: true })}
+            date={formatDate}
           ></PostMeta>
         </div>
         <PostTitle className="post-title" size="big">

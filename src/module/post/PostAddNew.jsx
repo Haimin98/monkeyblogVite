@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import slugify from "slugify";
-import Field from "../../components/field/Field";
-import Label from "../../components/Label/Label";
-import Input from "../../components/input/Input";
-import Radio from "../../components/checkbox/Radio";
-import Button from "../../components/button/Button";
-import { Dropdown } from "../../components/dropdown";
-import ImageUpload from "../../components/image/ImageUpload";
 import useFirebaseImage from "../../hooks/useFirebaseImage";
 import Toggle from "../../components/toggle/Toggle";
+import slugify from "slugify";
+import Radio from "../../components/checkbox/Radio";
+import Label from "../../components/Label/Label";
+import Input from "../../components/input/Input";
+import ImageUpload from "../../components/image/ImageUpload";
+import Field from "../../components/field/Field";
+import Button from "../../components/button/Button";
+import { useForm } from "react-hook-form";
+import { Dropdown } from "../../components/dropdown";
 import {
   addDoc,
   collection,
