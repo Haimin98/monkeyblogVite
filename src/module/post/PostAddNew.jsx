@@ -5,9 +5,9 @@ import slugify from "slugify";
 import Radio from "../../components/checkbox/Radio";
 import Label from "../../components/Label/Label";
 import Input from "../../components/input/Input";
-import ImageUpload from "../../components/image/ImageUpload";
 import Field from "../../components/field/Field";
 import Button from "../../components/button/Button";
+import ImageUpload from "../../components/image/ImageUpload";
 import { useForm } from "react-hook-form";
 import { Dropdown } from "../../components/dropdown";
 import {

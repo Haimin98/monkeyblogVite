@@ -6,16 +6,12 @@ import ActionEdit from "../components/action/ActionEdit";
 import ActionDelete from "../components/action/ActionDelete";
 import ActionView from "../components/action/ActionView";
 import { db } from "../firebase/firebase-config";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const colRel = collection(db, "categories");
     onSnapshot(colRel, (snapshot) => {
@@ -89,7 +85,11 @@ const CategoryManage = () => {
                     <ActionDelete
                       onClick={() => handleDeleteCategory(category.id)}
                     ></ActionDelete>
-                    <ActionView></ActionView>
+                    <ActionView
+                      onClick={() =>
+                        navigate(`/manage/update-category?id=${category.id}`)
+                      }
+                    ></ActionView>
                   </div>
                 </td>
               </tr>

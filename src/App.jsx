@@ -11,6 +11,7 @@ import PostManage from "./module/post/PostManage";
 import PostAddNew from "./module/post/PostAddNew";
 import CategoryAddNew from "./category/CategoryAddNew";
 import CategoryManage from "./category/CategoryManage";
+import CategoryUpdate from "./category/CategoryUpdate";
 
 const App = () => {
   return (
@@ -32,6 +33,10 @@ const App = () => {
               <Route
                 path="/manage/add-category"
                 element={<CategoryAddNew />}
+              ></Route>
+              <Route
+                path="/manage/update-category"
+                element={<CategoryUpdate />}
               ></Route>
             </Route>
           </Routes>

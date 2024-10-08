@@ -1,20 +1,19 @@
-import { Button } from "components/button";
-import { Radio } from "components/checkbox";
-import { Field } from "components/field";
-import { Input } from "components/input";
-import { Label } from "components/label";
-import { useAuth } from "contexts/auth-context";
-import { db } from "firebase-app/firebase-config";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import DashboardHeading from "module/dashboard/DashboardHeading";
 import React, { useEffect } from "react";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import slugify from "slugify";
 import Swal from "sweetalert2";
-import { categoryStatus, userRole } from "utils/constants";
-
+import { useAuth } from "../contexts/auth-context";
+import Field from "../components/field/Field";
+import Input from "../components/input/Input";
+import Label from "../components/Label/Label";
+import Radio from "../components/checkbox/Radio";
+import Button from "../components/button/Button";
+import { db } from "../firebase/firebase-config";
+import DashboardHeading from "../module/dashboard/DashboardHeading";
+import { userRole } from "../utils/constants";
 const CategoryUpdate = () => {
   const {
     control,
@@ -28,6 +27,7 @@ const CategoryUpdate = () => {
   });
   const [params] = useSearchParams();
   const categoryId = params.get("id");
+  if (!categoryId) return null;
   const navigate = useNavigate();
   useEffect(() => {
     async function fetchData() {
@@ -41,15 +41,15 @@ const CategoryUpdate = () => {
   const { userInfo } = useAuth();
 
   const handleUpdateCategory = async (values) => {
-    if (userInfo?.role !== userRole.ADMIN) {
-      Swal.fire("Failed", "You have no right to do this action", "warning");
-      return;
-    }
+    // if (userInfo?.role !== userRole.ADMIN) {
+    //   Swal.fire("Failed", "You have no right to do this action", "warning");
+    //   return;
+    // }
     const colRef = doc(db, "categories", categoryId);
     await updateDoc(colRef, {
       name: values.name,
       slug: slugify(values.slug || values.name, { lower: true }),
-      status: Number(values.status),
+      status: values.status,
     });
     toast.success("Update category successfully!");
     navigate("/manage/category");
@@ -87,16 +87,16 @@ const CategoryUpdate = () => {
               <Radio
                 name="status"
                 control={control}
-                checked={Number(watchStatus) === categoryStatus.APPROVED}
-                value={categoryStatus.APPROVED}
+                checked={watchStatus === "approved"}
+                value={"approved"}
               >
                 Approved
               </Radio>
               <Radio
                 name="status"
                 control={control}
-                checked={Number(watchStatus) === categoryStatus.UNAPPROVED}
-                value={categoryStatus.UNAPPROVED}
+                checked={watchStatus === "unapproved"}
+                value={"unapproved"}
               >
                 Unapproved
               </Radio>
@@ -105,7 +105,7 @@ const CategoryUpdate = () => {
         </div>
         <Button
           kind="primary"
-          className="mx-auto w-[200px]"
+          moreClass="mx-auto max-w-[200px]"
           type="submit"
           disabled={isSubmitting}
           isLoading={isSubmitting}

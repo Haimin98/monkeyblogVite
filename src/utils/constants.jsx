@@ -19,3 +19,7 @@ export const categoryStatus = {
   APPROVED: 1,
   UNAPPROVED: 2,
 };
+export const userRole = {
+  ADMIN: 1,
+  USER: 2,
+};
