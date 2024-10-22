@@ -27,10 +27,12 @@
 - displayName
 - email
 - password
+- avatar
 - status 1(active) 2(pending) 3(banned)
 - role 1(Admin) 2(mod) 3(user)
 - avatar
-- upload user
+- permissions: "ADD_POST"
+- createAt
 
 # add new post
 

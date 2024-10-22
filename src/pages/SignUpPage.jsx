@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase/firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import AuthenticationPage from "./AuthenticationPage";
 import slugify from "slugify";
 const schema = yup.object({
@@ -46,19 +46,20 @@ const SignUpPage = () => {
     );
     await updateProfile(auth.currentUser, {
       displayName: values.fullName,
+      photoURL:
+        "https://images.unsplash.com/photo-1728577740843-5f29c7586afe?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     });
-    const colRef = collection(db, "users");
     await setDoc(doc(db, "users", auth.currentUser.uid), {
       fullname: values.fullName,
       email: values.email,
       password: values.password,
       username: slugify(values.fullName, { lower: true }),
+      avatar:
+        "https://images.unsplash.com/photo-1728577740843-5f29c7586afe?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      status: "ACTIVE",
+      role: "USER",
+      createAt: serverTimestamp(),
     });
-    // await addDoc(colRef, {
-    //   fullname: values.fullName,
-    //   email: values.email,
-    //   password: values.password,
-    // });
     toast.success("Register successfully");
     navigate("/");
   };

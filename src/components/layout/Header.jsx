@@ -145,7 +145,7 @@ const Header = () => {
                 }}
                 to="/sign-up"
               >
-                Sign <Up></Up>
+                Sign Up
               </Button>
             </div>
           ) : (

@@ -12,6 +12,7 @@ import PostAddNew from "./module/post/PostAddNew";
 import CategoryAddNew from "./category/CategoryAddNew";
 import CategoryManage from "./category/CategoryManage";
 import CategoryUpdate from "./category/CategoryUpdate";
+import UserManage from "./module/user/UserManage";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
                 path="/manage/update-category"
                 element={<CategoryUpdate />}
               ></Route>
+              <Route path="/manage/user" element={<UserManage />}></Route>
             </Route>
           </Routes>
         </AuthProvider>

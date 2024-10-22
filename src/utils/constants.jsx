@@ -21,5 +21,11 @@ export const categoryStatus = {
 };
 export const userRole = {
   ADMIN: 1,
-  USER: 2,
+  MOD: 2,
+  USER: 3,
+};
+export const userStatus = {
+  ACTIVE: 1,
+  PENDING: 2,
+  BAN: 3,
 };

@@ -6,7 +6,7 @@ import { Label } from "components/label";
 
 import React from "react";
 import { useForm } from "react-hook-form";
-import DashboardHeading from "../module/dashboard/DashboardHeading";
+import DashboardHeading from "../dashboard/DashboardHeading";
 
 const UserAddNew = () => {
   const { control } = useForm({
