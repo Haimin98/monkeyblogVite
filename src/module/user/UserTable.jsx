@@ -19,7 +19,7 @@ const UserTable = () => {
             case "PENDING":
                 return <LabelStatus type="default">Pending</LabelStatus>;
             case "BAN":
-                return <LabelStatus type="warning">Pending</LabelStatus>;
+                return <LabelStatus type="warning">Banned</LabelStatus>;
             default:
                 break;
         }
@@ -87,7 +87,9 @@ const UserTable = () => {
             <td>{user.role}</td>
             <td>
                 <div className="flex items-center gap-x-3">
-                    <ActionEdit></ActionEdit>
+                    <ActionEdit onClick={() => {
+                        navigate(`/manage/update-user?id=${user.id}`)
+                    }}></ActionEdit>
                     {/* <ActionDelete
             onClick={() => handleDeleteCategory(user.id)}
           ></ActionDelete> */}
