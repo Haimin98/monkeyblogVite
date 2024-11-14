@@ -10,10 +10,9 @@ import Button from "../../components/button/Button.jsx";
 import {useForm} from "react-hook-form";
 import {useSearchParams} from "react-router-dom";
 import {db} from "../../firebase/firebase-config.jsx";
-import {doc, getDoc, updateDoc} from "firebase/firestore";
+import {doc, getDoc, updateDoc} from "firebase/firestore"
 import {toast} from "react-toastify";
 import useFirebaseImage from "../../hooks/useFirebaseImage.jsx";
-
 
 const UserUpdate = () => {
     const {control, handleSubmit, reset, watch, getValues, setValue, formState: {isSubmitting, isValid}} = useForm({
@@ -34,7 +33,8 @@ const UserUpdate = () => {
     const imageUrl = getValues("avatar");
     const imageNameTest = /%2F(\S+)\?/gm.exec(imageUrl);
     const image_name = imageNameTest ? imageNameTest[1] : "not found";
-    console.log(image_name);
+
+    // console.log(image_name);
 
     async function deleteAvatar() {
         const colRef = doc(db, "users", userId);

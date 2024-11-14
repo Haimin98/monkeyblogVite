@@ -12,7 +12,7 @@ import {useForm} from "react-hook-form";
 import {Dropdown} from "../../components/dropdown";
 import {
     addDoc,
-    collection,
+    collection, doc, getDoc,
     getDocs,
     query,
     serverTimestamp,
@@ -21,6 +21,7 @@ import {
 import {db} from "../../firebase/firebase-config";
 import {useAuth} from "../../contexts/auth-context";
 import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
 
 const PostAddNew = () => {
     //*title
@@ -34,9 +35,10 @@ const PostAddNew = () => {
             title: "",
             slug: "",
             status: "approved",
-            categoryId: "",
             hot: false,
             image: "",
+            category: {},
+            user: {},
         },
     });
     const {
@@ -52,16 +54,34 @@ const PostAddNew = () => {
     const [categories, setCategories] = useState([]);
     const [selectCategory, setSelectCategory] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    //*getUser data
+    useEffect(() => {
+        async function fetchUserData() {
+            if (!userInfo.email) return;
+            const q = query(collection(db, "users"),
+                where("email", "==", userInfo.email));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                setValue("user", {
+                    id: doc.id,
+                    ...doc.data(),
+                })
+            })
+        }
+
+        fetchUserData();
+    }, [userInfo.email])
     const addPostHandler = async (values) => {
         try {
             //*upload slug using slugify
             values.slug = slugify(values.slug || values.title, {lower: true});
             values.status = values.status;
             const colRef = collection(db, "posts");
+            console.log(values);
             await addDoc(colRef, {
                 ...values,
                 image,
-                userId: userInfo.uid,
                 createAt: serverTimestamp(),
             });
             setLoading(true);
@@ -71,14 +91,16 @@ const PostAddNew = () => {
                 title: "",
                 slug: "",
                 status: "approved",
-                categoryId: "",
+                category: {},
                 hot: false,
                 image: "",
+                user: {},
             });
             setLoading(false);
             setSelectCategory(null);
             setImage("");
             setProgress(0);
+            navigate("/manage/post")
         } catch (err) {
             setLoading(false);
         } finally {
@@ -104,8 +126,14 @@ const PostAddNew = () => {
 
         getData();
     }, []);
-    const handleClickOption = (item) => {
-        setValue("categoryId", item.id);
+    const handleClickOption = async (item) => {
+        const colRef = doc(db, "categories", item.id);
+        const docData = await getDoc(colRef);
+        // console.log(docData.data())
+        setValue("category", {
+            id: docData.id,
+            ...docData.data(),
+        })
         setSelectCategory(item);
     };
     return (
