@@ -15,6 +15,8 @@ import CategoryUpdate from "./category/CategoryUpdate";
 import UserManage from "./module/user/UserManage";
 import UserAddNew from "./module/user/UserAddNew";
 import UserUpdate from "./module/user/UserUpdate.jsx";
+import PostUpdate from "./module/post/PostUpdate.jsx";
+import PostDetailsPage from "./pages/PostDetailsPage.jsx";
 
 const App = () => {
     return (
@@ -23,12 +25,14 @@ const App = () => {
                 <AuthProvider>
                     <Routes>
                         <Route path="/" element={<HomePage/>}></Route>
+                        <Route path="/:slug" element={<PostDetailsPage/>}></Route>
                         <Route path="/sign-up" element={<SignUpPage/>}></Route>
                         <Route path="/sign-in" element={<SignInPage/>}></Route>
                         <Route path="*" element={<NotFoundPage/>}></Route>
                         <Route element={<DashboardLayout></DashboardLayout>}>
                             <Route path="/manage/post" element={<PostManage/>}></Route>
                             <Route path="/manage/add-post" element={<PostAddNew/>}></Route>
+                            <Route path="/manage/update-post" element={<PostUpdate/>}></Route>
                             <Route
                                 path="/manage/category"
                                 element={<CategoryManage/>}
@@ -44,6 +48,7 @@ const App = () => {
                             <Route path="/manage/user" element={<UserManage/>}></Route>
                             <Route path="/manage/add-user" element={<UserAddNew/>}></Route>
                             <Route path="/manage/update-user" element={<UserUpdate/>}></Route>
+
                         </Route>
                     </Routes>
                 </AuthProvider>

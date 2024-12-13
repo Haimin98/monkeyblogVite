@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect,useState} from "react";
 
 import styled from "styled-components";
 import Layout from "../components/layout/Layout.jsx";
@@ -13,6 +13,7 @@ import {collection, getDoc, onSnapshot, query, where} from "firebase/firestore";
 import {db} from "../firebase/firebase-config.jsx";
 import parse from 'html-react-parser';
 import slugify from "slugify";
+
 
 const PostDetailsPageStyles = styled.div`
     padding-bottom: 100px;

@@ -44,6 +44,32 @@
     color: #6b6b6b;
   }
 
+  ul,
+  ol {
+    margin-bottom: 20px;
+
+    li {
+      margin-bottom: 10px;
+    }
+  }
+
+  img {
+    border-radius: 8px;
+    max-width: 100%;
+    margin: 20px auto;
+  }
+
+  .quill {
+    position: relative;
+
+    .ql-toolbar {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 1000;
+    }
+  }
+
   @media screen and (max-width: 1023.98px) {
     font-size: 14px;
     h2 {

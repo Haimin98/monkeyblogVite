@@ -8,8 +8,8 @@
 - image
 - createAt
 - status: 1(approved) , 2(pending) , 3(reject)
-- userId
-- categoryID
+- user : { id, username, fullname, avatar, description }
+- category : {id, name, slug}
 - content
 - hot(true or false)
 

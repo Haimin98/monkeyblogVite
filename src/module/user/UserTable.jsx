@@ -1,6 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from "react";
 import Table from "../../components/table/Table";
-import {collection, deleteDoc, doc, onSnapshot} from "firebase/firestore";
+import {collection, deleteDoc, doc, getDocs, limit, onSnapshot, query, where} from "firebase/firestore";
 import {db} from "../../firebase/firebase-config";
 import ActionEdit from "../../components/action/ActionEdit";
 import {useNavigate} from "react-router-dom";
@@ -9,9 +10,46 @@ import ActionDelete from "../../components/action/ActionDelete.jsx";
 import Swal from "sweetalert2";
 import {deleteUser} from "firebase/auth"
 
-const UserTable = () => {
-    const [userList, setUserList] = useState([]);
+const UserTable = ({filter = ""}) => {
     const navigate = useNavigate();
+    const [userList, setUserList] = useState([]);
+    const [lastDoc, setLastDoc] = useState();
+    const [total, setTotal] = useState(0);
+    const [userCount, setUserCount] = useState(0);
+    const USER_PER_PAGE = 3;
+    //* search user
+    useEffect(() => {
+        async function getData() {
+            const colRel = collection(db, "users");
+            const newRef = filter
+                ? query(
+                    colRel,
+                    where("fullname", ">=", filter),
+                    where("fullname", "<=", filter + "utf8")
+                )
+                : query(colRel, limit(USER_PER_PAGE));
+            const documentSnapshots = await getDocs(newRef);
+            const lastVisible =
+                documentSnapshots.docs[documentSnapshots.docs.length - 1];
+            setLastDoc(lastVisible);
+            onSnapshot(colRel, (snapshot) => {
+                setTotal(Number(snapshot.size));
+            });
+            onSnapshot(newRef, (snapshot) => {
+                let results = [];
+                setUserCount(Number(snapshot.size));
+                snapshot.forEach((doc) => {
+                    results.push({
+                        id: doc.id,
+                        ...doc.data(),
+                    });
+                });
+                setUserList(results);
+            });
+        }
+
+        getData();
+    }, [filter])
     const renderLabelStatus = (status) => {
         switch (status) {
             case "ACTIVE":
@@ -37,7 +75,7 @@ const UserTable = () => {
             });
         });
     }, []);
-    //   console.log(userList);
+
     const handleDeleteUser = async (user) => {
         const colRef = doc(db, "users", user.id);
         Swal.fire({

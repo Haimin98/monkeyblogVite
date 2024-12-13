@@ -40,7 +40,7 @@ const HomeFeature = () => {
         <Heading>Bài viết nổi bật</Heading>
         <div className="grid-layout">
           {posts.map((post) => (
-            <PostFeatureItem key={post.id} data={post}></PostFeatureItem>
+            <PostFeatureItem key={post.id} data={post} ></PostFeatureItem>
           ))}
         </div>
       </div>
