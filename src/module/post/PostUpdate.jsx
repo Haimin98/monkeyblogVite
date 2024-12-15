@@ -19,14 +19,17 @@ import {toast} from "react-toastify";
 
 
 const PostUpdate = () => {
-    const [loading, setLoading] = useState(false);
     const [params] = useSearchParams();
     const [categories, setCategories] = useState([]);
     const [selectCategory, setSelectCategory] = useState("");
     const [content, setContent] = useState("");
     const postId = params.get("id");
 
-    const {handleSubmit, control, setValue, watch, reset, getValues} = useForm({
+    const {
+        handleSubmit, control, setValue, watch, reset, getValues, formState: {
+            isValid, isSubmitting
+        }
+    } = useForm({
         mode: "onChange",
     })
     const watchHot = watch("hot");
@@ -128,6 +131,7 @@ const PostUpdate = () => {
     };
     //*UpdatePost
     const updatePostHandler = async (values) => {
+        if (!isValid) return;
         const docRef = doc(db, "posts", postId);
         await updateDoc(docRef, {
             ...values,
@@ -251,8 +255,8 @@ const PostUpdate = () => {
                 <Button
                     type="submit"
                     moreClass="mx-auto max-w-[250px]"
-                    isLoading={loading}
-                    disabled={loading}
+                    isLoading={isSubmitting}
+                    disabled={isSubmitting}
 
                 >
                     Update post

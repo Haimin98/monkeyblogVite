@@ -13,6 +13,8 @@ import {db} from "../../firebase/firebase-config.jsx";
 import {doc, getDoc, updateDoc} from "firebase/firestore"
 import {toast} from "react-toastify";
 import useFirebaseImage from "../../hooks/useFirebaseImage.jsx";
+import Textarea from "../../components/textarea/Textarea.jsx";
+
 
 const UserUpdate = () => {
     const {control, handleSubmit, reset, watch, getValues, setValue, formState: {isSubmitting, isValid}} = useForm({
@@ -162,6 +164,12 @@ const UserUpdate = () => {
                                     User
                                 </Radio>
                             </FieldCheckboxes>
+                        </Field>
+                    </div>
+                    <div className="form-layout">
+                        <Field>
+                            <Label>Description</Label>
+                            <Textarea name="description" control={control}></Textarea>
                         </Field>
                     </div>
                     <Button type="submit" kind="primary" moreClass="mx-auto max-w-[200px]" disabled={isSubmitting}
