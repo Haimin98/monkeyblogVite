@@ -82,6 +82,8 @@ const PostAddNew = () => {
             console.log(values);
             await addDoc(colRef, {
                 ...values,
+                categoryId : values.categoryId,
+                userId : values.user.id,
                 image,
                 createAt: serverTimestamp(),
             });

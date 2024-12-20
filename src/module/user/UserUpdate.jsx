@@ -14,6 +14,7 @@ import {doc, getDoc, updateDoc} from "firebase/firestore"
 import {toast} from "react-toastify";
 import useFirebaseImage from "../../hooks/useFirebaseImage.jsx";
 import Textarea from "../../components/textarea/Textarea.jsx";
+import InputPasswordToggle from "../../components/input/InputPasswordToggle.jsx";
 
 
 const UserUpdate = () => {
@@ -122,12 +123,12 @@ const UserUpdate = () => {
                         </Field>
                         <Field>
                             <Label>Password</Label>
-                            <Input
+                            <InputPasswordToggle
                                 name="password"
                                 placeholder="Enter your password"
                                 control={control}
                                 type="password"
-                            ></Input>
+                            ></InputPasswordToggle>
                         </Field>
                     </div>
                     <div className="form-layout">

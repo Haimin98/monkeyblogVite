@@ -10,6 +10,7 @@
 - status: 1(approved) , 2(pending) , 3(reject)
 - user : { id, username, fullname, avatar, description }
 - category : {id, name, slug}
+- categoryId
 - content
 - hot(true or false)
 

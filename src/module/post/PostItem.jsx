@@ -3,25 +3,40 @@ import PostCategory from "./PostCategory";
 import PostTitle from "./PostTitle";
 import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
+import PropTypes from "prop-types";
+import slugify from "slugify";
 
-const PostItem = () => {
-  return (
-    <div className="flex flex-col items-start">
-      <PostImage
-        className="h-[202px] mb-5 block w-full rounded-2xl"
-        url="https://images.unsplash.com/photo-1570993492881-25240ce854f4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2290&q=80"
-      ></PostImage>
 
-      <PostCategory classMore="mb-4 post-category" type="secondary">
-        Kiến thức
-      </PostCategory>
+const PostItem = ({data}) => {
+    if (!data) return null;
+    const date = new Date(data?.createAt?.seconds * 1000);
+    const formatDate = new Date(date).toLocaleDateString("vi-VN");
+    return (
+        <div className="flex flex-col items-start">
+            <PostImage
+                className="h-[202px] mb-5 block w-full rounded-2xl"
+                to={data.slug}
+                url={data.image}
+            ></PostImage>
 
-      <PostTitle className="mb-2 post-title">
-        Hướng dẫn setup phòng cực chill dành cho người mới toàn tập
-      </PostTitle>
-      <PostMeta></PostMeta>
-    </div>
-  );
+            <PostCategory to={data.category?.name} classMore="mb-4 post-category" type="secondary">
+                {data.category?.name}
+            </PostCategory>
+
+            <PostTitle className="mb-2 post-title" to={data.slug}>
+                {data.title}
+            </PostTitle>
+            <PostMeta authorName={data?.user?.fullname}
+                      to={slugify(data?.fullname || "", {lower: true})}
+                      date={formatDate}>
+            </PostMeta>
+        </div>
+    );
 };
+
+PostItem.propTypes = {
+    data: PropTypes.shape([]),
+    image: PropTypes.string,
+}
 
 export default PostItem;

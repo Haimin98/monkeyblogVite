@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Layout from "../components/layout/Layout.jsx";
-import Heading from "../components/layout/Heading.jsx";
 import PostImage from "../module/post/PostImage.jsx";
 import PostCategory from "../module/post/PostCategory.jsx";
 import PostMeta from "../module/post/PostMeta.jsx";
-import PostItem from "../module/post/PostItem.jsx";
 import {useParams} from "react-router-dom";
 import NotFoundPage from "./NotFoundPage.jsx";
 import {collection, onSnapshot, query, where} from "firebase/firestore";
@@ -12,6 +10,7 @@ import {db} from "../firebase/firebase-config.jsx";
 import parse from 'html-react-parser';
 import slugify from "slugify";
 import AuthorBox from "../components/author/AuthorBox.jsx";
+import PostRelated from "../module/post/PostRelated.jsx";
 
 const PostDetailsPage = () => {
     const {slug} = useParams();
@@ -29,10 +28,12 @@ const PostDetailsPage = () => {
 
         fetchData();
     }, [slug]);
-    // console.log(postInfo);
+    //*auto ontop
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    })
     if (!slug) return <NotFoundPage/>;
     if (!postInfo.title) return null;
-    // console.log(postInfo.content);
     const {user} = postInfo;
     const date = new Date(postInfo?.createAt?.seconds * 1000);
     const formatDate = new Date(date).toLocaleDateString("vi-VN");
@@ -62,15 +63,7 @@ const PostDetailsPage = () => {
                         </div>
                         <AuthorBox userId={user.id}></AuthorBox>
                     </div>
-                    <div className="post-related">
-                        <Heading>Bài viết liên quan</Heading>
-                        <div className="grid-layout grid-layout--primary">
-                            <PostItem></PostItem>
-                            <PostItem></PostItem>
-                            <PostItem></PostItem>
-                            <PostItem></PostItem>
-                        </div>
-                    </div>
+                    <PostRelated categoryId={postInfo.categoryId}></PostRelated>
                 </div>
             </Layout>
         </>

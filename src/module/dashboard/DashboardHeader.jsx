@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from "react";
 import styled from "styled-components";
 import Button from "../../components/button/Button";
@@ -24,7 +25,7 @@ const DashboardHeaderStyles = styled.div`
 `;
 
 const DashboardHeader = () => {
-    return (
+    return (    
         <DashboardHeaderStyles>
             <Button
                 kind="secondary"
@@ -43,5 +44,5 @@ const DashboardHeader = () => {
         </DashboardHeaderStyles>
     );
 };
-
+``
 export default DashboardHeader;
