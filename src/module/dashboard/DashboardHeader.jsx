@@ -1,48 +1,33 @@
-// eslint-disable-next-line no-unused-vars
 import React from "react";
-import styled from "styled-components";
 import Button from "../../components/button/Button";
-
-const DashboardHeaderStyles = styled.div`
-    background-color: white;
-    padding: 20px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
-
-    .header-avatar {
-        width: 52px;
-        height: 52px;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 100rem;
-        }
-    }
-`;
+import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/auth-context";
 
 const DashboardHeader = () => {
-    return (    
-        <DashboardHeaderStyles>
-            <Button
-                kind="secondary"
-                to="/manage/add-post"
-                moreClass="header-button"
-                height="h-[52px]"
-            >
-                Write new post
-            </Button>
-            <div className="header-avatar">
-                <img
-                    src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80"
-                    alt=""
-                />
-            </div>
-        </DashboardHeaderStyles>
-    );
+  const { userInfo } = useAuth();
+
+  return (
+    <div className="flex justify-end gap-5 p-5 bg-white border-b border-gray-200">
+      <Button
+        kind="secondary"
+        to="/manage/add-post"
+        moreClass="header-button"
+        height="h-[52px]"
+      >
+        Write new post
+      </Button>
+      <Link
+        to="/profile"
+        className="w-[52px] h-[52px] rounded-full overflow-hidden"
+      >
+        <img
+          src={userInfo?.avatar || ""}
+          alt=""
+          className="object-cover w-full h-full rounded-full"
+        />
+      </Link>
+    </div>
+  );
 };
-``
+``;
 export default DashboardHeader;

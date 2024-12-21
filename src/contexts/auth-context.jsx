@@ -1,6 +1,7 @@
 import { onAuthStateChanged } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../firebase/firebase-config";
+import { auth, db } from "../firebase/firebase-config";
+import { query, collection, where, onSnapshot } from "firebase/firestore";
 
 const AuthContext = createContext();
 function AuthProvider({ children }, props) {
@@ -8,8 +9,19 @@ function AuthProvider({ children }, props) {
   const value = { userInfo, setUserInfo };
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      setUserInfo(user);
-      // console.log(user);
+      if (user) {
+        const docRef = query(
+          collection(db, "users"),
+          where("email", "==", user.email)
+        );
+        onSnapshot(docRef, (snapshot) => {
+          snapshot.forEach((doc) => {
+            setUserInfo({ ...user, ...doc.data() });
+          });
+        });
+      } else {
+        setUserInfo(null);
+      }
     });
   }, []);
   return (
@@ -25,4 +37,5 @@ function useAuth() {
   }
   return context;
 }
+// eslint-disable-next-line react-refresh/only-export-components
 export { AuthProvider, useAuth };
