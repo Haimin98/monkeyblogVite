@@ -13,8 +13,9 @@ import Radio from "../components/checkbox/Radio";
 import Button from "../components/button/Button";
 import { db } from "../firebase/firebase-config";
 import DashboardHeading from "../module/dashboard/DashboardHeading";
-import { userRole } from "../utils/constants";
 const CategoryUpdate = () => {
+  const { userInfo } = useAuth();
+
   const {
     control,
     reset,
@@ -38,7 +39,6 @@ const CategoryUpdate = () => {
     fetchData();
   }, [categoryId, reset]);
   const watchStatus = watch("status");
-  const { userInfo } = useAuth();
 
   const handleUpdateCategory = async (values) => {
     // if (userInfo?.role !== userRole.ADMIN) {

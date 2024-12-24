@@ -24,6 +24,7 @@ const schema = yup.object({
     .string()
     .required("Please enter your password")
     .min(8, "Your password must be at least 8 characters"),
+  phone: yup.string().required("Please enter your phone number"),
 });
 
 const SignUpPage = () => {
@@ -38,17 +39,14 @@ const SignUpPage = () => {
   });
   const handleSignUp = async (values) => {
     if (!isValid) return;
-    console.log(values);
-    const user = await createUserWithEmailAndPassword(
-      auth,
-      values.email,
-      values.password
-    );
+    // console.log(values);
+    await createUserWithEmailAndPassword(auth, values.email, values.password);
     await updateProfile(auth.currentUser, {
       displayName: values.fullName,
       photoURL:
         "https://images.unsplash.com/photo-1728577740843-5f29c7586afe?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     });
+    //* set data to firestore
     await setDoc(doc(db, "users", auth.currentUser.uid), {
       fullname: values.fullName,
       email: values.email,
@@ -58,6 +56,7 @@ const SignUpPage = () => {
         "https://images.unsplash.com/photo-1728577740843-5f29c7586afe?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       status: "ACTIVE",
       role: "USER",
+      phone: values.phone,
       createAt: serverTimestamp(),
     });
     toast.success("Register successfully");
@@ -99,9 +98,19 @@ const SignUpPage = () => {
           ></Input>
         </Field>
         <Field>
+          <Label htmlFor="phone">Phone</Label>
+          <Input
+            control={control}
+            type="text"
+            name="phone"
+            placeholder="Enter your phone number"
+          ></Input>
+        </Field>
+        <Field>
           <Label htmlFor="password">Password</Label>
           <InputPasswordToggle control={control}></InputPasswordToggle>
         </Field>
+
         <div className="mb-5">
           Already have an account?{" "}
           <NavLink

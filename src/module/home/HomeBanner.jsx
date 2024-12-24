@@ -16,7 +16,7 @@ const HomeBanner = () => {
                 voluptates, fugit voluptatem, natus, voluptas voluptate
               </p>
             </div>
-            <Button to="/sign-up" kind="secondary" className="mx-auto md:mx-0">
+            <Button to="/sign-up" kind="secondary" moreClass="mx-auto md:mx-0">
               Get Started
             </Button>
           </div>

@@ -130,7 +130,7 @@ const PostManage = () => {
   //*check role
   const { userInfo } = useAuth();
 
-  if (userInfo?.role !== "admin") {
+  if (userInfo?.role !== "ADMIN") {
     return <NotAdminPage></NotAdminPage>;
   }
   return (

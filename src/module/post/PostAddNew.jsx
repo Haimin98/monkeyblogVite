@@ -76,11 +76,12 @@ const PostAddNew = () => {
     }
 
     fetchUserData();
-  }, [userInfo.email]);
+  }, [setValue, userInfo.email]);
   const addPostHandler = async (values) => {
     try {
       //*upload slug using slugify
       values.slug = slugify(values.slug || values.title, { lower: true });
+      // eslint-disable-next-line no-self-assign
       values.status = values.status;
       const colRef = collection(db, "posts");
       console.log(values);
@@ -142,10 +143,10 @@ const PostAddNew = () => {
     setSelectCategory(item);
   };
   return (
-    <div className="mb-24 post-add-new">
+    <div className="px-4 mb-10 sm:mb-16 md:mb-20 lg:mb-24 post-add-new">
       <DashboardHeading title="Add post" desc="Add new post"></DashboardHeading>
       <form onSubmit={handleSubmit(addPostHandler)}>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="grid grid-cols-1 gap-5 mb-5 sm:grid-cols-2 sm:gap-6 sm:mb-6 md:gap-8 md:mb-8 lg:gap-10 lg:mb-10">
           <Field>
             <Label>Title</Label>
             <Input
@@ -163,7 +164,7 @@ const PostAddNew = () => {
             ></Input>
           </Field>
         </div>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="grid grid-cols-1 gap-5 mb-5 sm:grid-cols-2 sm:gap-6 sm:mb-6 md:gap-8 md:mb-8 lg:gap-10 lg:mb-10">
           <Field>
             <Label>Image</Label>
             <ImageUpload
@@ -190,13 +191,13 @@ const PostAddNew = () => {
               </Dropdown.List>
             </Dropdown>
             {selectCategory?.name && (
-              <span className="inline-block p-3 text-sm font-medium rounded bg-gradient-to-r from-primary to-secondary">
+              <span className="inline-block p-2 mt-2 text-xs font-medium rounded sm:text-sm sm:p-3 bg-gradient-to-r from-primary to-secondary">
                 {selectCategory?.name}
               </span>
             )}
           </Field>
         </div>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="grid grid-cols-1 gap-5 mb-5 sm:grid-cols-2 sm:gap-6 sm:mb-6 md:gap-8 md:mb-8 lg:gap-10 lg:mb-10">
           <Field>
             <Label>Feature Post</Label>
             <Toggle
@@ -206,7 +207,7 @@ const PostAddNew = () => {
           </Field>
           <Field>
             <Label>Status</Label>
-            <div className="flex items-center gap-x-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
               <Radio
                 name="status"
                 control={control}
@@ -239,7 +240,7 @@ const PostAddNew = () => {
         </div>
         <Button
           type="submit"
-          moreClass="mx-auto max-w-[250px]"
+          moreClass="mx-auto w-full sm:max-w-[200px] md:max-w-[225px] lg:max-w-[250px]"
           isLoading={loading}
           disabled={loading}
         >

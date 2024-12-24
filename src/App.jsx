@@ -18,6 +18,7 @@ import UserUpdate from "./module/user/UserUpdate.jsx";
 import PostUpdate from "./module/post/PostUpdate.jsx";
 import PostDetailsPage from "./pages/PostDetailsPage.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
+import UserProfile from "./module/user/UserProfile.jsx";
 
 const App = () => {
   return (
@@ -56,6 +57,7 @@ const App = () => {
                 path="/manage/update-user"
                 element={<UserUpdate />}
               ></Route>
+              <Route path="/profile" element={<UserProfile />}></Route>
             </Route>
           </Routes>
         </AuthProvider>

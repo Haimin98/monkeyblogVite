@@ -31,6 +31,7 @@ const Button = ({
   const buttonClasses = `${baseClasses} ${height}  ${
     kind === "primary" ? primary : secondary
   } disabled:opacity-50 disabled:pointer-events-none ${moreClass}`;
+  // eslint-disable-next-line no-extra-boolean-cast
   const child = !!isLoading ? <LoadingSpinner></LoadingSpinner> : children;
   if (to !== "" && typeof to === "string") {
     return (
